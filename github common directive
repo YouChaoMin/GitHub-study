@@ -1,10 +1,14 @@
 配置用户信息：
 git confit --global user.name "YouChaoMin"
 git confit --global user.email "1330676845@qq.com"
+看是否配置成功
+git config user.name
 
 新建文件夹并切入:
 mkdir git-learn
 cd git-learn
+查看创建的文件目录
+pwd
 
 创建仓库:
 git init
@@ -16,8 +20,14 @@ echo "helllo world">>readme.txt
 git status
 
 添加全部修改到暂存区并提交:
-git add -A
-git commit -m"comment"
+git add -A             /*windows使用git时出现：warning: LF will be replaced by CRLF
+                         windows中的换行符为 CRLF， 而在linux下的换行符为LF，所以在执行add . 时出现提示，解决办法：
+                         $ rm -rf .git  // 删除.git  
+                         $ git config --global core.autocrlf false  //禁用自动转换
+                         然后重新执行：
+                         $ git init    
+                         $ git add   */
+git commit -m"add readme.txt"
 gitk
 
 添加github远程库并推送文件
