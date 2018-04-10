@@ -48,4 +48,12 @@ Branch 'master' set up to track remote branch 'master' from 'origin'.
 
 在github上的项目clone到本地文件
 git clone http://github.com/XX/XX
+/*
+$ git clone https://github.com/YouChaoMin/9GAG
+Cloning into '9GAG'...
+remote: Counting objects: 1199, done.
+remote: Total 1199 (delta 0), reused 0 (delta 0), pack-reused 1199
+Receiving objects: 100% (1199/1199), 8.00 MiB | 150.00 KiB/s, done.
+Resolving deltas: 100% (560/560), done.
+*/
   
