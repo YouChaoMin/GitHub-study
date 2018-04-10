@@ -1,0 +1,29 @@
+配置用户信息：
+git confit --global user.name "YouChaoMin"
+git confit --global user.email "1330676845@qq.com"
+
+新建文件夹并切入:
+mkdir git-learn
+cd git-learn
+
+创建仓库:
+git init
+
+新建readme.txt
+echo "helllo world">>readme.txt
+
+查看当前状态:
+git status
+
+添加全部修改到暂存区并提交:
+git add -A
+git commit -m"comment"
+gitk
+
+添加github远程库并推送文件
+git remote addorigin https://github.com/XX/XX
+git push -u origin master
+
+在github上的项目clone到本地文件
+git clone http://github.com/XX/XX
+  
