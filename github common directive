@@ -33,6 +33,18 @@ gitk
 添加github远程库并推送文件
 git remote addorigin https://github.com/XX/XX
 git push -u origin master
+/*fatal: HttpRequestException encountered.
+   ▒▒▒▒▒▒▒▒ʱ▒▒▒▒
+fatal: HttpRequestException encountered.
+   ▒▒▒▒▒▒▒▒ʱ▒▒▒▒
+Username for 'https://github.com': YouChaoMin
+Counting objects: 3, done.
+Writing objects: 100% (3/3), 226 bytes | 226.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/YouChaoMin/git-learn.git
+ * [new branch]      master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+*/                        //成功提交后显示
 
 在github上的项目clone到本地文件
 git clone http://github.com/XX/XX
