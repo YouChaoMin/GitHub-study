@@ -58,10 +58,94 @@ Resolving deltas: 100% (560/560), done.
 */
   
 版本回退
-通过git reset HEAD^可以回退到上一个版本
-通过git reset HEAD^^可以回退到上上个版本
+通过git reset HEAD^^可以回退到上一个版本
+通过git reset HEAD^可以回退到上上个版本
 通过git reset a234b3可以回退到版本号为a234b3的版本
 git命令的选项如下：
 git reset --hard HEAD^ 修改版本库，修改暂存区，修改工作区
 git reset --mixed HEAD^ 修改版本库，修改暂存区，保留工作区(默认)
 git reset --soft HEAD^ 修改版本库，保留暂存区，保留工作区
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~
+$ cd git-learn
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ pwd
+/c/Users/YCM/git-learn
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ echo "Hello China">>readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ echo "Hello China">>read.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ pycat read.txt
+bash: pycat: command not found
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git commit -a -m"Hello China"
+[master 056e3ec] Hello China
+ 1 file changed, 1 insertion(+)
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ echo "Hello Fujian">>read.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git add -A
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git commit -a -m"Hello Fujian"
+[master 1618fd2] Hello Fujian
+ 2 files changed, 2 insertions(+)
+ create mode 100644 readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git log
+commit 1618fd28ca91faca07425ddaf3fa5534b567bea2 (HEAD -> master)
+Author: YouChaoMin <1330676845@qq.com>
+Date:   Thu Apr 12 01:11:28 2018 +0800
+
+    Hello Fujian
+
+commit 056e3ec9ab5e1e26189f61230981119a22cb2477
+Author: YouChaoMin <1330676845@qq.com>
+Date:   Thu Apr 12 01:09:55 2018 +0800
+
+    Hello China
+
+commit 617761716aca057c73e42fff64421c7d862f801c (origin/master)
+Author: YouChaoMin <1330676845@qq.com>
+Date:   Tue Apr 10 11:08:28 2018 +0800
+
+    add readme.txt
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git reset --hard HEAD^
+HEAD is now at 6177617 add readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git log
+commit 617761716aca057c73e42fff64421c7d862f801c (HEAD -> master, origin/master)
+Author: YouChaoMin <1330676845@qq.com>
+Date:   Tue Apr 10 11:08:28 2018 +0800
+
+    add readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git log --oneline --graph
+* 6177617 (HEAD -> master, origin/master) add readme.txt
+
+版本前进
+可以用git reflog查看该版本的commit id进而根据版本号进行恢复git reset --hard xxxxx
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git reflog
+6177617 (HEAD -> master, origin/master) HEAD@{0}: reset: moving to HEAD^
+056e3ec HEAD@{1}: reset: moving to HEAD^
+1618fd2 HEAD@{2}: commit: Hello Fujian
+056e3ec HEAD@{3}: commit: Hello China
+6177617 (HEAD -> master, origin/master) HEAD@{4}: commit (initial): add readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git reset --hard 1618fd2
+HEAD is now at 1618fd2 Hello Fujian
+
