@@ -31,7 +31,7 @@ git commit -m"add readme.txt"
 gitk
 
 添加github远程库并推送文件
-git remote addorigin https://github.com/XX/XX
+git remote add origin https://github.com/XX/XX
 git push -u origin master
 /*fatal: HttpRequestException encountered.
    ▒▒▒▒▒▒▒▒ʱ▒▒▒▒
