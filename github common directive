@@ -155,3 +155,163 @@ HEAD is now at 1618fd2 Hello Fujian
 git checkout --filename命令中的--很重要，没有--，就变成了“切换到另一个分支”的命令。
 如果文件已经add过了，但不想用暂存区而想用版本库中的最新版本文件覆盖工作区文件，
 那么类似于一个版本回退，可以用git reset --hard HEAD。
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ echo "H">>read.txt
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git add -A
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ echo "%^&^%^">read.txt
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git checkout -- read.txt             //回到160之后状态，即撤销了164操作
+
+删除文件
+删除文件也是一种修改，git跟踪的是修改而非文件。因此删除文件可以直接在工作区手动删除文件，然后add -A再commit即可。对于已经提交过的文件，也可以用
+git rm newfile.txt直接删除工作区和暂存区文件，然后再commit
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ echo 'delete me'>>newfile.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git add -A
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git commit -m"add a newfile"
+[master 920a6c4] add a newfile
+ 2 files changed, 2 insertions(+)
+ create mode 100644 newfile.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git rm newfile.txt
+rm 'newfile.txt'         //即删除了newfile.txt
+
+比较文件
+git diff可以比较不同版本库的同名文件
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ echo "Hello Java">>read.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git  diff read.txt
+diff --git a/read.txt b/read.txt
+index e8c71fe..5d9f12e 100644
+--- a/read.txt
++++ b/read.txt
+@@ -3,3 +3,4 @@ Hello China
+ Hello Fujian
+ HEOO
+ H
++Hello Java
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git add read.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git diff HEAD read.txt
+diff --git a/read.txt b/read.txt
+index e8c71fe..5d9f12e 100644
+--- a/read.txt
++++ b/read.txt
+@@ -3,3 +3,4 @@ Hello China
+ Hello Fujian
+ HEOO
+ H
++Hello Java
+
+添加远程:
+通常可以用SSH协议和远程库通信或使用http协议和远程库通信。
+http协议较为方便，但SSH协议方式速度较快。
+ssh-keygen -t rsa -C"1330676845@qq.com"
+在git bash中运行上述命令，并一路回车，在用户主目录里找到.ssh目录。
+目录下的id_rsa有私钥，不能泄露出去。里面的id_rsa.pub是公钥，可分享给别人。
+在GitHub————>settings————>SSH Keys页面添加SSH公钥。
+ssh -T git@github.com
+再在git bash中运行上述命令，使得本机和github建立SSH连接
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ ssh-keygen -t rsa -C"1330676845@qq.com"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/c/Users/YCM/.ssh/id_rsa):
+Created directory '/c/Users/YCM/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /c/Users/YCM/.ssh/id_rsa.
+Your public key has been saved in /c/Users/YCM/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:L4vrlGwp4Fv7pCiMS3+JJHZrgzV2AFkl4/jyBAf7Oao 1330676845@qq.com
+The key's randomart image is:
++---[RSA 2048]----+
+| .o+..           |
+| o= o            |
+| +.o             |
+|  =..            |
+| ..*.   S        |
+| +=B.o o .       |
+|+oO.B O . .      |
+|=o.O X . o       |
+|Eo+.=o=..        |
++----[SHA256]-----+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ ssh -T git@github.com
+The authenticity of host 'github.com (13.250.177.223)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'github.com,13.250.177.223' (RSA) to the list of known hosts.
+Hi YouChaoMin! You've successfully authenticated, but GitHub does not provide shell access.
+
+可以使用SSH地址添加远程库
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git remote add github git@github.com:YouChaoMin/git-learn.git
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git remote -v
+github  git@github.com:YouChaoMin/git-learn.git (fetch)
+github  git@github.com:YouChaoMin/git-learn.git (push)
+orgin   https://github.com/YouChaoMin/git-learn (fetch)
+orgin   https://github.com/YouChaoMin/git-learn (push)
+origin  https://github.com/YouChaoMin/git-learn.git (fetch)
+origin  https://github.com/YouChaoMin/git-learn.git (push)
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git remote remove origin
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git remote
+github
+orgin
+//不是很懂
+
+推送远程:
+使用git push命令将当前仓库内容推送至远程仓库//不懂
+
+克隆远程
+git clone可以将远程仓库克隆至本地某一目录，相当于下载。不指定仓库时，会克隆到当前目录下的一个文件夹。通常在github中把
+感兴趣的别人的项目fork到自己的仓库里，然后再使用clone方法下载到本地进行编辑。
+git clone http://github.com/xxx/xxx
+通常用./表示当前目录，../表示当前目录的父目录
+
+更新远程:
+fetch能够获取远程仓库的更新，但不同步到本地仓库。fetch获取到的是修改，不会获取文件，而clone会获取文件。可以在fetch之后
+利用merge，rebase等方法合并并同步到本地。
+在git-learn项目下新建一个test.txt文件并commit 
+git fetch github master
+git merge github/master         //把github中新加的test.txt更新到本地
+
+合并远程:
+git pull能够获取远程仓库的更新，并同步合并到本地
+相当于git fetch之后再merge。有时候会有冲突，需要解决。
+你可以在GitHub网站上的通过fork一些开源项目的代码，然后clone到本地后，尝试完善项目，再发送pull request到项目发
+起人，如果项目发起人通过了你的请求，那么你就为开源项目做出了贡献。
+在github中的对应git-learn的read.txt的最后一行加上"remote line"并commit，在本地的git-learn的read.txt的最后
+一行加上"local line"并commit，则会发生冲突。
+echo "local line">>read.txt
+git add -A
+git commit -m"update local"
+git pull github master
+尝试git pull，但是出现了冲突，在本地文件打开read.txt根据指引解决冲突。
+解决冲突后add,commit,push即可
+git add -A
+git commit -m"solve conflict"
+git push
+
+分支创建:
+通常在团队协作时经常需要使用分支功能。开发时大家在不同的分支上工作，互不冲突。
+到一定开发阶段再使用分支合并功能综合大家的工作结果。
+默认的分支为master，可以用git branch develop在当前位置创建分支。
