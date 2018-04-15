@@ -315,3 +315,343 @@ git push
 通常在团队协作时经常需要使用分支功能。开发时大家在不同的分支上工作，互不冲突。
 到一定开发阶段再使用分支合并功能综合大家的工作结果。
 默认的分支为master，可以用git branch develop在当前位置创建分支。
+·master：主分支，主要用来版本发布。
+·develop：日常开发分支，该分支正常保存了开发的最新代码。
+·feature：具体的功能开发分支，只与develop分支交互
+·release：release分支可以认为是master分支的未测试版。比如说某一期的功能全部开发完成，那么就将develop分支
+          合并到release分支，测试没有问题并且到了发布日期就合并到master分支，进行发布。
+·hotfix：线上bug修复分支。
+#创建和删除分支
+git --all
+#在当前head位置创建分支develop
+git branch develop
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git branch develop
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git log --oneline --graph --all
+* 5d75293 (github/master) Create test.txt
+| * d64d235 (HEAD -> master, develop) Hello Hello
+|/
+* 920a6c4 (ycm/master) add a newfile
+* e49fa25 add 2333
+* cedd4a3 add read.txt
+* 1618fd2 Hello Fujian
+* 056e3ec Hello China
+* 6177617 add readme.txt
+#在某个commit id号位置创建分支feature
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git branch feature 1618fd2
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git branch
+  develop
+  feature
+* master
+#查看包括远程同步仓库的所有分支
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git branch -a
+  develop
+  feature
+* master
+  remotes/github/master
+  remotes/ycm/master
+#删除分支feature
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git branch -d feature
+Deleted branch feature (was 1618fd2).
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git branch
+  develop
+* master     //*表示处于当前分支
+
+分支切换:
+使用git checkout develop可以从当前分支切换到develop分支。
+使用git checkout -b feature可以在当前HEAD位置创建新分支feature并将HEAD切换到新分支。
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git checkout develop
+Switched to branch 'develop'
+A       test.txt
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (develop)
+$ git checkout -b feature 1618fd2
+Switched to a new branch 'feature'
+A       test.txt
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (feature)
+$ git checkout master
+Switched to branch 'master'
+A       test.txt
+Your branch and 'github/master' have diverged,
+and have 1 and 1 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+
+分支合并：
+merge方法可以将两个有共同祖先节点的不同分支进行合并。
+如果其中一个分支完全领先于另外一个分支，那么默认会采用fast forward合并方式，不会产生新的节点。
+如果两个分支在分叉后各自有新的commit，那么会是一种三方合并方式，会产生新的节点。
+第二种情况下可能需要解决冲突。
+使用no-ff模式可以保留被合并分支的所有信息。
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git log --oneline --graph --all
+* 968c32a (HEAD -> master, origin/master) add read.txt
+* 135cd1a Hello Hello
+* 5d75293 (github/master) Create test.txt
+| * d64d235 (develop) Hello Hello
+|/
+* 920a6c4 (ycm/master) add a newfile
+* e49fa25 add 2333
+* cedd4a3 add read.txt
+* 1618fd2 (feature) Hello Fujian
+* 056e3ec Hello China
+* 6177617 add readme.txt
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git log --oneline --graph --all
+* 968c32a (HEAD -> master, origin/master) add read.txt
+* 135cd1a Hello Hello
+* 5d75293 (github/master) Create test.txt
+| * d64d235 (develop) Hello Hello
+|/
+* 920a6c4 (ycm/master) add a newfile
+* e49fa25 add 2333
+* cedd4a3 add read.txt
+* 1618fd2 (feature) Hello Fujian
+* 056e3ec Hello China
+* 6177617 add readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ gitk --all
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ echo "writen by master branch">>read.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git add -A
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git commit -m"master branch"
+[master d8579e4] master branch
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git checkout develop
+Switched to branch 'develop'
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (develop)
+$ echo "writen by develop branch">>read.txt
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (develop)
+$ git commit -am"develop branch"
+[develop 75137d8] develop branch
+ 1 file changed, 1 insertion(+)
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (develop)
+$ gitk --all
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (develop)
+$ git log --oneline --graph --all
+* 75137d8 (HEAD -> develop) develop branch
+* d64d235 Hello Hello
+| * d8579e4 (master) master branch
+| * 968c32a (origin/master) add read.txt
+| * 135cd1a Hello Hello
+| * 5d75293 (github/master) Create test.txt
+|/
+* 920a6c4 (ycm/master) add a newfile
+* e49fa25 add 2333
+* cedd4a3 add read.txt
+* 1618fd2 (feature) Hello Fujian
+* 056e3ec Hello China
+* 6177617 add readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (develop)
+$ git checkout master
+Switched to branch 'master'
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git merge develop
+Auto-merging read.txt
+CONFLICT (content): Merge conflict in read.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+read.txt里显示：
+hello world
+Hello China
+Hello Fujian
+HEOO
+H
+Hello Java
+Hello Hello
+<<<<<<< HEAD
+hhhhhwriten by master branch
+=======
+writen by develop branch
+>>>>>>> develop
+解决冲突后重新提交
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git add -A
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|MERGING)
+$ git commit -m"merged"
+[master 4885e96] merged
+
+分支重演：
+除了使用merge方法整合不同分支的内容外，分支重演rebase也是一种整合不同分支内容的方法。
+git rebase origin实际上是以origin位置为新的base，逐个重演当前分支的每个节点。
+在rebase的过程中，也许会出现冲突（conflict）。
+在这种情况，Git会停止rebase并让你去解决冲突。
+在解决完冲突后，用“git add”命令去更新这些内容。
+然后，你无需执行“git commit”，只要执行：
+git rebase --continue
+这样git会继续重演其余节点。
+在任何时候，你可以用如下命令来终止rebase的行动并恢复到rebase之前状态：
+git rebase --abort
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git log --oneline --graph --all
+*   4885e96 (HEAD -> master) merged
+|\
+| * 75137d8 (develop) develop branch
+| * d64d235 Hello Hello
+* | d8579e4 master branch
+* | 968c32a (origin/master) add read.txt
+* | 135cd1a Hello Hello
+* | 5d75293 (github/master) Create test.txt
+|/
+* 920a6c4 (ycm/master) add a newfile
+* e49fa25 add 2333
+* cedd4a3 add read.txt
+* 1618fd2 (feature) Hello Fujian
+* 056e3ec Hello China
+* 6177617 add readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git reset --hard d8579e4
+HEAD is now at d8579e4 master branch
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git log --oneline --graph --all
+* 75137d8 (develop) develop branch
+* d64d235 Hello Hello
+| * d8579e4 (HEAD -> master) master branch
+| * 968c32a (origin/master) add read.txt
+| * 135cd1a Hello Hello
+| * 5d75293 (github/master) Create test.txt
+|/
+* 920a6c4 (ycm/master) add a newfile
+* e49fa25 add 2333
+* cedd4a3 add read.txt
+* 1618fd2 (feature) Hello Fujian
+* 056e3ec Hello China
+* 6177617 add readme.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git branch
+  develop
+  feature
+* master
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master)
+$ git rebase develop
+First, rewinding head to replay your work on top of it...
+Applying: Create test.txt
+Applying: add read.txt
+error: Failed to merge in the changes.
+Using index info to reconstruct a base tree...
+M       read.txt
+Falling back to patching base and 3-way merge...
+Auto-merging read.txt
+CONFLICT (content): Merge conflict in read.txt
+Patch failed at 0002 add read.txt
+The copy of the patch that failed is found in: .git/rebase-apply/patch
+
+Resolve all conflicts manually, mark them as resolved with
+"git add/rm <conflicted_files>", then run "git rebase --continue".
+You can instead skip this commit: run "git rebase --skip".
+To abort and get back to the state before "git rebase", run "git rebase --abort".
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|REBASE 2/3)
+$ git add read.txt
+
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|REBASE 2/3)
+$ git rebase --continue
+Applying: add read.txt
+Applying: master branch
+error: Failed to merge in the changes.
+Using index info to reconstruct a base tree...
+M       read.txt
+Falling back to patching base and 3-way merge...
+Auto-merging read.txt
+CONFLICT (content): Merge conflict in read.txt
+Patch failed at 0003 master branch
+The copy of the patch that failed is found in: .git/rebase-apply/patch
+
+Resolve all conflicts manually, mark them as resolved with
+"git add/rm <conflicted_files>", then run "git rebase --continue".
+You can instead skip this commit: run "git rebase --skip".
+To abort and get back to the state before "git rebase", run "git rebase --abort".
+YCM@LAPTOP-ST1UV1CB MINGW64 ~/git-learn (master|REBASE 3/3)
+$ git log --oneline --graph --all
+* 8d49f0a (HEAD) add read.txt
+* 6701650 Create test.txt
+* 75137d8 (develop) develop branch
+* d64d235 Hello Hello
+| * d8579e4 (master) master branch
+| * 968c32a (origin/master) add read.txt
+| * 135cd1a Hello Hello
+| * 5d75293 (github/master) Create test.txt
+|/
+* 920a6c4 (ycm/master) add a newfile
+* e49fa25 add 2333
+* cedd4a3 add read.txt
+* 1618fd2 (feature) Hello Fujian
+* 056e3ec Hello China
+* 6177617 add readme.txt
+
+储藏管理：
+如果工作只进行到一半，还没法提交。
+但出现了一个着急的事情需要马上切换去解决，例如修复一个临时bug。
+有没有什么办法呢？
+Git提供的stash功能非常适用于这种需要现场保存的情境。
+把当前工作现场“储藏”起来，等以后恢复现场后继续工作。
+stash非常像是一种特殊的分支。
+
+echo "not done">>read.txt
+git stash
+git stash list
+git checkout develop
+echo "fix a simple bug">>read.txt
+git commit -am"fix bug 01"
+git checkout master
+git stash pop   //弹出
+gitk --all
+echo "done 50%">>read.txt
+git stash save "50% done"
+git stash list
+echo "done 75%">>read.txt
+git stash save "75% done"
+git stash list
+git satash apply 0
+git stash list  
+git stash drop 0 //删除
+
+标签管理：
+用标签记录版本号会更加方便协作管理。
+如果团队间按如下方式沟通将很麻烦：
+“请把上周一的那个版本打包发布，commit号是6a5819e“
+而有了版本号将会方便许多
+“请把上周一的那个版本打包发布，版本号是v1.2”
+标签和分支很像，都是指向commit id 的指针，但标签不能移动而分支能够移动。
+#当前head位置打上v2.0标签
+git tag v2.0
+#在commit id为4e30082位置打上v1.0标签
+#查看全部标签
+git tag
+#查看标签对应版本号等信息
+git show v1.0
+
+git push github master
+#推送标签到远程
+git push github v2.0
+#删除标签
+git tag -d v1.0
+#删除远程标签
+git push github :refs/tags/v1.0
+git log --oneline --graph --all
+gitk --all
